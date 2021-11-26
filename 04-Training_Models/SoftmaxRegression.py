@@ -14,12 +14,20 @@ class SoftmaxRegression(object):
         Y_hot = self.one_hot(np.array(Y))
         # Init weights
         self.weights = np.random.randn(self.n, self.k)
+        # Best loss
+        best_loss = np.inf
 
         for epoch in range(epochs):
             y_hat = X_b.dot(self.weights)
             softmax = self.softmax(y_hat)
+            loss = -np.mean(np.sum(Y_hot * np.log(softmax + epsilon), axis=1))
+            if loss > best_loss:
+                break
+            else:
+                best_loss = loss
+
             if epoch % 500 == 0:
-                loss = -np.mean(np.sum(Y_hot * np.log(softmax + epsilon), axis=1))
+
                 print(epoch, ": ", loss)
             error = softmax - Y_hot
             gradient = 1/self.m * X_b.T.dot(error)
